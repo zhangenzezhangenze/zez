@@ -1,0 +1,110 @@
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <stdbool.h>  
+#include <unistd.h> // 用于sleep函数  
+#include<termios.h>
+  
+#define WIDTH 20  
+#define HEIGHT 10  
+#define MAX_POSITIONS 100  
+#define DELAY 100000 // 微秒延迟  
+  
+typedef struct {  
+    int x;  
+    int y;  
+} Position;  
+  
+Position characterPosition = {WIDTH / 2, HEIGHT / 2};  
+Position positions[MAX_POSITIONS];  
+int positionCount = 0;  
+ 
+void drawCharacter() {  
+int x,y;
+    for (y = 0; y < HEIGHT; y++) {  
+        for (x = 0; x < WIDTH; x++) {  
+            if (x == characterPosition.x && y == characterPosition.y) {  
+                printf("*");  
+            } else {  
+                printf(" ");  
+            }  
+        }  
+        printf("\n");  
+    }  
+}  
+  
+int getch_(void) {  
+    struct termios oldt, newt;  
+    int ch;  
+    tcgetattr(STDIN_FILENO, &oldt);  
+    newt = oldt;  
+    newt.c_lflag &= ~(ICANON | ECHO);  
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);  
+    ch = getchar();  
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);  
+    return ch;  
+}  
+
+void moveCharacter(char direction) {  
+    switch (direction) {  
+        case 'w':  
+            if (characterPosition.y > 0) characterPosition.y--;  
+            fflush(stdout);
+            break;  
+        case 's':  
+            if (characterPosition.y < HEIGHT - 1) characterPosition.y++; 
+             fflush(stdout); 
+            break;  
+        case 'a':  
+            if (characterPosition.x > 0) characterPosition.x--;  
+             fflush(stdout);
+            break;  
+        case 'd':  
+            if (characterPosition.x < WIDTH - 1) characterPosition.x++;  
+             fflush(stdout);
+            break;  
+        default:  
+            return; // 无效输入，不移动  
+    }  
+    if (positionCount < MAX_POSITIONS) {  
+        positions[positionCount++] = characterPosition;  
+    }  
+}  
+  
+void replayTrajectory() {  
+    system("clear");  
+    int i;
+    for (i = 0; i < positionCount; i++) {  
+        characterPosition = positions[i];  
+        drawCharacter();  
+        usleep(DELAY); // 延迟以模拟动画效果  
+        system("clear"); // 清屏以准备下一帧  
+    }  
+}  
+  
+int main() {  
+    char input;  
+    bool running = true;  
+  
+    while (running) {  
+        drawCharacter(); // 绘制当前字符位置  
+  
+        printf("Move character (w/a/s/d, q to quit): ");  
+        //scanf(" %c", &input); // 读取输入字符  
+  	input=getch_();
+        switch (input) {  
+            case 'q':  
+                running = false;  
+                break;  
+            default:  
+                moveCharacter(input); // 移动字符并记录位置  
+                break;  
+        }  
+  
+        usleep(DELAY); // 延迟以提供动画效果  
+ 	system("clear"); // 清屏以准备下一帧  
+    }  
+  
+    replayTrajectory(); // 播放移动轨迹  
+  
+    return 0;  
+}
