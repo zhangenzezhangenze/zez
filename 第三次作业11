@@ -1,0 +1,30 @@
+#include<stdio.h>
+int main(){
+	int i,j;
+	int a[5];
+	int x,y;
+	printf("insert a set of number:\n");
+	for(i=0;i<5;i++){
+		printf("a[%d]=",i);
+		scanf("%d",&a[i]);
+	}
+	for(i=0;i<4;i++){
+		x=a[i];
+		y=i;
+		for(j=i+1;j<5;j++){
+			if(a[j]<a[i]){
+				x=a[j];
+				y=j;
+			}
+		}
+		a[y]=a[i];
+		a[i]=x;
+	}
+	for(i=0;i<5;i++){
+	printf("%d\t",a[i]);
+	}
+	printf("\n");
+	return 0;
+}
+
+                               
