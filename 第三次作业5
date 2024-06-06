@@ -1,0 +1,21 @@
+#include<stdio.h>
+int main(){
+	int array[2][3]={
+		{1,2,3},
+		{4,5,6}
+	};
+	printf("%p\n",&array[0][1]);
+	printf("%p\n",&array[0][0]);
+	printf("%p\n",&array[1][0]);
+	printf("%p\n",&array[0][2]);
+	int b=&array[0][1]-&array[0][0];
+	int c=&array[1][0]-&array[0][2];
+	if(b=c){
+		printf("it is stored by row\n");
+	}
+		else{
+			printf("it is not stored by row\n");
+		}
+	return 0;
+}
+
