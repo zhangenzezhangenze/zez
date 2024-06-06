@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+
+// 终端尺寸
+#define WIDTH 80
+#define HEIGHT 24
+
+// 生成一个随机字符 '0' 或 '1'
+char random_char() {
+    return "01"[rand() % 2];
+}
+
+// 设置光标位置
+void set_cursor_position(int x, int y) {
+    printf("\033[%d;%dH", y + 1, x + 1);
+}
+
+// 设置文本颜色
+void set_text_color(int color) {
+    printf("\033[3%dm", color);
+}
+
+// 重置终端设置
+void reset_terminal() {
+    printf("\033[0m");
+    printf("\033[2J"); // 清除屏幕
+    printf("\033[H");  // 光标回到原点
+}
+
+int main() {
+    srand(time(NULL));
+    
+    // 清除屏幕并隐藏光标
+    printf("\033[2J\033[?25l");
+    
+    int drops[WIDTH];
+    for (int i = 0; i < WIDTH; i++) {
+        drops[i] = rand() % HEIGHT;
+    }
+
+    while (1) {
+        // 打印代码雨
+        for (int i = 0; i < WIDTH; i++) {
+            set_cursor_position(i, drops[i]);
+            set_text_color(2); // 设置颜色为绿色
+            printf("%c", random_char());
+
+            // 减少屏幕顶端的字符亮度
+            set_cursor_position(i, drops[i] - 2);
+            set_text_color(2); // 设置颜色为绿色
+            printf(" ");
+        }
+
+        // 刷新缓冲区
+        fflush(stdout);
+
+        // 更新位置
+        for (int i = 0; i < WIDTH; i++) {
+            drops[i] = (drops[i] + 1) % HEIGHT;
+        }
+
+        // 暂停一段时间
+        usleep(100000); // 100毫秒
+    }
+
+    // 显示光标并重置终端
+    printf("\033[?25h");
+    reset_terminal();
+    
+    return 0;
+}
