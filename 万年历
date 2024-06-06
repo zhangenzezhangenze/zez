@@ -1,0 +1,64 @@
+#include <stdio.h>  
+  
+int checkyear(int year) {  
+    if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {  
+        return 1;  
+    } else {  
+        return 0;  
+    }  
+}  
+  
+int week(int year) {  
+    int sum = 0;  
+    int i;
+    for (i = 1; i < year; i++) {  
+        if (checkyear(i)) {  
+            sum += 366;  
+        } else {  
+            sum += 365;  
+        }  
+    }  
+    return (sum + 1) % 7;  
+}  
+  
+void enter(int year, int months[]) {  
+    months[1] = 28 + checkyear(year);  
+}  
+  
+void run(int week, int months[]) {  
+    int a = 0;  
+    int b = week;
+	int i,j,k;  
+    for (i = 1; i <= 12; i++) {  //最外层遍历12月 
+        printf("-----%d-----\n", i);  
+        printf("su mo tu we th fr sa\n");  
+        for (k = 0; k < b; k++) {  
+            printf("    ");  
+            a++;  
+        }  
+        for (j = 1; j <= months[i - 1]; j++) {  
+            if (a % 7 == 0) {  
+                printf("\n");  
+            }  
+            printf("%d ", j);  
+            a++;  
+        }  
+        b = (b + months[i - 1]) % 7;  //下一个月的第一天星期几=（上个月第一天星期几+上个月的天数）%7 
+        a -= b;  //减去每月开头的空格数 
+        printf("\n\n\n");  
+    }  
+}  
+  
+int main() {  
+    int year;  
+    printf("insert a year: ");  
+    scanf("%d", &year);  
+      
+    int months[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};  
+    enter(year, months);  
+      
+    int week_start = week(year);  
+    run(week_start, months);  
+      
+    return 0;  
+}
