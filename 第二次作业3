@@ -1,0 +1,76 @@
+#include<stdio.h> 
+void printE(){  
+    printf("******\n");  
+    printf("*     \n");  
+    printf("*     \n");  
+    printf("******\n");  
+    printf("*     \n");  
+    printf("*     \n");  
+    printf("******\n");  
+}  
+  
+void printF(){  
+    printf("******\n");  
+    printf("*     \n");  
+    printf("*     \n");  
+    printf("******\n");  
+    printf("*     \n");  
+    printf("*     \n");  
+}  
+  
+void printT(){  
+    printf("*******\n");  
+    printf("   *   \n");  
+    printf("   *   \n");  
+    printf("   *   \n");  
+    printf("   *   \n");  
+}  
+  
+void printE_F(){  
+    printf("******  ******\n");  
+    printf("*       *     \n");  
+    printf("******  ******\n");  
+    printf("*       *     \n");  
+    printf("******  *     \n");  
+}  
+  
+void printE_T(){  
+    printf("****** *******\n");  
+    printf("*         *   \n");  
+    printf("******    *   \n");  
+    printf("*         *   \n");  
+    printf("******    *   \n");  
+}  
+  
+void printF_T(){  
+    printf("******  *******\n");  
+    printf("*          *   \n");  
+    printf("******     *   \n");  
+    printf("*          *   \n");  
+    printf("******     *   \n");  
+}  
+  
+int main(){  
+    char input[3];   
+    printf("Enter a combination of letters (E, T, F):");  
+    scanf(" %2s", input);
+  
+    if (input[0] == 'E' && input[1] == 'F') {  
+        printE_F();  
+    } else if (input[0] == 'E' && input[1] == 'T') {  
+        printE_T();  
+    } else if (input[0] == 'F' && input[1] == 'T') {  
+        printF_T();  
+    } else if (input[0] == 'E') {  
+        printE();  
+    } else if (input[0] == 'F') {  
+        printF();  
+    } else if (input[0] == 'T') {  
+        printT();  
+    } else {  
+        printf("Invalid input!\n");  
+    }  
+  
+    return 0;  
+}
+
