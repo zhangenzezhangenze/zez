@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <string.h>
+#include<stdlib.h>
+#define MAX_LINES 100
+#define MAX_WORDS 1000
+
+int main() {
+    char *lines[MAX_LINES]; // 指针数组，存放用户输入的每一行字符串
+    char words[MAX_WORDS][50]; // 二维字符数组，存放出现过的单词
+    int freq[MAX_WORDS][MAX_LINES]; // 二维整型数组，记录每个单词在每行出现的次数
+    int total_freq[MAX_WORDS] = {0}; // 一维整型数组，记录每个单词在用户输入中总共出现的次数
+    int line_count = 0; // 记录用户输入的行数
+    int word_count = 0; // 记录出现过的单词数
+
+    printf("请输入多行英文字符串，以\"END\"结束输入：\n");
+
+    // 读取用户输入，以"END"作为结束符
+    while (1) {
+        lines[line_count] = (char *) malloc(100 * sizeof(char));
+        fgets(lines[line_count], 100, stdin);
+        if (strcmp(lines[line_count], "END\n") == 0) {
+            free(lines[line_count]);
+            break;
+        }
+        line_count++;
+    }
+
+    // 统计每个单词在每行出现的次数，并记录总共出现的次数
+    for (int i = 0; i < line_count; i++) {
+        char *word = strtok(lines[i], " ,.!?;\n"); // 使用strtok函数分割单词
+        while (word != NULL) {
+            int exist = 0;
+            // 判断单词是否已经出现过，若出现过则更新计数器，否则新添加单词并记录计数器
+            for (int j = 0; j < word_count; j++) {
+                if (strcmp(words[j], word) == 0) {
+                    freq[j][i]++;
+                    total_freq[j]++;
+                    exist = 1;
+                    break;
+                }
+            }
+            if (!exist) {
+                strcpy(words[word_count], word);
+                freq[word_count][i]++;
+                total_freq[word_count]++;
+                word_count++;
+            }
+            word = strtok(NULL, " ,.!?;\n");
+        }
+    }
+
+    // 输出结果
+    printf("\n出现过的单词及其在每一行出现的次数如下：\n");
+    for (int i = 0; i < word_count; i++) {
+        printf("%s: ", words[i]);
+        for (int j = 0; j < line_count; j++) {
+            printf("%d ", freq[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\n出现过的单词及其在用户输入中总共出现的次数如下：\n");
+    for (int i = 0; i < word_count; i++) {
+        printf("%s: %d\n", words[i], total_freq[i]);
+    }
+
+    // 释放动态分配的内存空间
+    for (int i = 0; i < line_count; i++) {
+        free(lines[i]);
+    }
+
+    return 0;
+}
