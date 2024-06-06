@@ -3,71 +3,69 @@
 #include <unistd.h>
 #include <time.h>
 
-// 终端尺寸
 #define WIDTH 80
 #define HEIGHT 24
+#define DELAY 50000 // 微秒，0.05秒
 
-// 生成一个随机字符 '0' 或 '1'
-char random_char() {
-    return "01"[rand() % 2];
+/*void clear_screen() {
+    printf("\033[H\033[J");
+}*/
+
+void move_cursor(int x, int y) {
+    printf("\033[%d;%dH", y, x);
 }
 
-// 设置光标位置
-void set_cursor_position(int x, int y) {
-    printf("\033[%d;%dH", y + 1, x + 1);
-}
-
-// 设置文本颜色
-void set_text_color(int color) {
-    printf("\033[3%dm", color);
-}
-
-// 重置终端设置
-void reset_terminal() {
-    printf("\033[0m");
-    printf("\033[2J"); // 清除屏幕
-    printf("\033[H");  // 光标回到原点
+void set_color(int color) {
+    printf("\033[0;%dm", color);
 }
 
 int main() {
     srand(time(NULL));
-    
-    // 清除屏幕并隐藏光标
-    printf("\033[2J\033[?25l");
-    
-    int drops[WIDTH];
-    for (int i = 0; i < WIDTH; i++) {
-        drops[i] = rand() % HEIGHT;
+    //clear_screen();
+
+    char screen[HEIGHT][WIDTH + 1]; // +1 for null terminator
+    int rain_columns[WIDTH];
+
+    // 初始化屏幕和雨滴列
+    for (int x = 0; x < WIDTH; x++) {
+        rain_columns[x] = rand() % HEIGHT;
+        for (int y = 0; y < HEIGHT; y++) {
+            screen[y][x] = ' ';
+        }
     }
 
     while (1) {
-        // 打印代码雨
-        for (int i = 0; i < WIDTH; i++) {
-            set_cursor_position(i, drops[i]);
-            set_text_color(2); // 设置颜色为绿色
-            printf("%c", random_char());
+        system("clear");
+        
+        // 更新屏幕和雨滴位置
+        for (int x = 0; x < WIDTH; x++) {
+            int y = rain_columns[x];
+            screen[y][x] = '0' + (rand() % 2); // 随机选择'0'或'1'
 
-            // 减少屏幕顶端的字符亮度
-            set_cursor_position(i, drops[i] - 2);
-            set_text_color(2); // 设置颜色为绿色
-            printf(" ");
+            // 移动雨滴位置
+            rain_columns[x] = (y + 1) % HEIGHT;
+
+            // 清除上一帧雨滴
+            int prev_y = (y - 1 + HEIGHT) % HEIGHT;
+            screen[prev_y][x] = ' ';
         }
 
-        // 刷新缓冲区
+        // 绘制屏幕
+        for (int y = 0; y < HEIGHT; y++) {
+            move_cursor(1, y + 1);
+            for (int x = 0; x < WIDTH; x++) {
+                if (screen[y][x] == '2' || screen[y][x] == '1') {
+                    set_color(32); // 绿色
+                } else {
+                    set_color(0); // 重置颜色
+                }
+                putchar(screen[y][x]);
+            }
+        }
+
         fflush(stdout);
-
-        // 更新位置
-        for (int i = 0; i < WIDTH; i++) {
-            drops[i] = (drops[i] + 1) % HEIGHT;
-        }
-
-        // 暂停一段时间
-        usleep(100000); // 100毫秒
+        usleep(DELAY);
     }
 
-    // 显示光标并重置终端
-    printf("\033[?25h");
-    reset_terminal();
-    
     return 0;
 }
