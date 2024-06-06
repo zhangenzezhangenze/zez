@@ -1,0 +1,55 @@
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <unistd.h> // 提供 sleep 函数  
+#include <string.h>  
+  
+#define DELAY_TIME 100000 // 微秒，即0.1秒  
+#define MAX_LINES 5       // 最大行数  
+#define MAX_LENGTH 50     // 每行最大长度  
+  
+void scroll_strings(const char strings[][MAX_LENGTH], int num_lines) {  
+    int offset = 0; // 滚动偏移量  
+  
+    while (1) { // 无限循环  
+        system("clear");
+        // 滚动并打印每一行  
+        for (int line = 0; line < num_lines; ++line) {  
+            const char *str = strings[line];  
+            int len = strlen(str);  
+  
+            // 打印当前行的滚动字符串  
+            for (int i = 0; i < len; ++i) {  
+                int pos = (i + offset) % len; // 计算当前字符在字符串中的位置  
+               printf("\033[91m\033[107m%c\033[0m", str[pos]);
+                //putchar(\033[91m\033[107mstr[pos]\033[0m); // 打印字符  
+            }  
+  
+            // 在每行末尾添加换行符以分隔行  
+            printf("\n");  
+        }  
+  
+        fflush(stdout); // 确保输出立即显示在控制台上  
+  
+        usleep(DELAY_TIME); // 等待一段时间  
+  
+        // 更新滚动偏移量  
+        offset = (offset + 1) % MAX_LENGTH; // 假设所有行长度相同，或者取最大长度作为滚动周期  
+    }  
+}  
+  
+int main() {  
+    // 初始化字符串数组，存储多行文本  
+    const char strings[MAX_LINES][MAX_LENGTH] = {  
+        "*    * ***** *     *     ***** *  ",  
+        "*    * *     *     *     *   * *  ",  
+        "****** ***** *     *     *   * *  ",  
+        "*    * *     *     *     *   *    ",  
+        "*    * ***** ***** ***** ***** *  "  
+    };  
+  
+    // 调用滚动函数  
+    scroll_strings(strings, MAX_LINES);  
+  
+    // 注意：由于程序在无限循环中，以下return语句实际上永远不会被执行  
+    return 0;  
+}
