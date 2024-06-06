@@ -1,0 +1,17 @@
+#include<stdio.h>
+int main(){
+        char ch;
+	unsigned char byte;
+	printf("input a number:");
+	scanf("%c",&ch);
+	byte=(unsigned char)ch;
+	printf("the eighth bit is %d\n",(byte>>7&1));
+	printf("the seventh bit is %d\n",(byte>>6&1));
+	printf("the sixth bit is %d\n",(byte>>5&1));
+	printf("the fifth bit is %d\n",(byte>>4&1));
+	printf("the forth bit is %d\n",(byte>>3&1));
+	printf("the third bit is %d\n",(byte>>2&1));
+	printf("the second bit is %d\n",(byte>>1&1));
+	printf("the first bit is %d\n",byte&1);
+	return 0;
+}
