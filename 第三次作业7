@@ -1,0 +1,47 @@
+#include<stdio.h>
+void matrix_multi(double A[3][4],double B[4][5],double C[3][5]){
+int i,j,k;
+	for(i=0;i<3;i++){
+		for(j=0;j<5;j++){
+			C[i][j]=0;
+			for(k=0;k<4;k++){
+				C[i][j]+=A[i][k]*B[k][j];
+			}
+		}
+	}
+}
+int main(){
+	int i,j;
+	double A[3][4]={
+		{1,2,3,4},
+		{1,2,3,4},
+		{1,2,3,4}
+	};
+	double B[4][5]={
+		{1,2,3,4,5},
+		{1,2,3,4,5},
+		{1,2,3,4,5},
+		{1,2,3,4,5},
+	};
+	double C[3][5];
+	matrix_multi(A,B,C);
+	printf("C:\n");
+	for(i=0;i<3;i++){
+		for(j=0;j<5;j++){
+			printf("%f",C[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
+
+	 
+		
+	
+
+	
+
+			
+
+
+		 
