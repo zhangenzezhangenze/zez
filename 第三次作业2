@@ -1,0 +1,61 @@
+#include<stdio.h>
+int main(){
+	char a[5][6]={
+	{'S','D','U','Y','E','S'},
+	{'C','H','I','N','A','!'},
+	{'A','F','T','E','R','X'},
+	{'h','e','r','o','a','b'},
+	{'C','y','y','D','S','!'}
+};
+	int i,j;
+	int x,y;
+	int m,n;
+	for(i=0;i<5;i++){
+		for(j=0;j<6;j++){
+		       for(y=5;y>=j;y--){
+			       if(a[i][y]<a[i][j]){
+				       x=a[i][j];
+				       a[i][j]=a[i][y];
+				       a[i][y]=x;
+			       }
+		       }
+		}
+}
+int sumA=0;
+int sumB=0;
+char temp;
+int k;
+for(i=0;i<4;i++){
+	for(j=0;j<3;j++){
+		for(k=0;k<6;k++){
+			sumA+=a[j][k];
+			sumB+=a[j+1][k];
+		}
+		if(sumA>sumB){
+			for(k=0;k<6;k++){
+				temp=a[j][k];
+				a[j][k]=a[j+1][k];
+				a[j+1][k]=temp;
+			}
+		}
+	}
+}
+
+
+	for(i=0;i<5;i++){
+		for(j=0;j<6;j++){
+			printf("%c\t",a[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
+
