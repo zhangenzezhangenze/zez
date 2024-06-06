@@ -1,0 +1,13 @@
+//#include<stdio.h>
+int main(){
+	char a[]="C!YYDS!";
+	long *p=a;
+	printf("%ld\n",*p);
+	return 0;
+}
+#include<stdio.h>
+int main(){
+	long x=9380227253346627;
+	printf("%s\n",&x);
+	return 0;
+}
